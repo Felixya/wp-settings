@@ -1,20 +1,21 @@
 <?php
 /**
- * PB Settings
+ * Wp Settings
  *
  * Quick settings page generator for WordPress
  *
- * @package PB_Settings
- * @version 3.3.2
- * @author Pluginbazar
- * @copyright 2019 Pluginbazar.com
+ * @package wp-settings
+ * @version 3.3.3
+ * @author Jaed Mosharraf
+ * @author_url https://jaed.pro
+ * @copyright Jaed 2021
  * @see https://github.com/jaedm97/PB-Settings
  */
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'PB_Settings' ) ) {
-	class PB_Settings {
+if ( ! class_exists( 'WP_Settings' ) ) {
+	class WP_Settings {
 
 		public $data = array();
 
@@ -23,7 +24,7 @@ if ( ! class_exists( 'PB_Settings' ) ) {
 
 
 		/**
-		 * PB_Settings constructor.
+		 * wp_settings constructor.
 		 *
 		 * @param array $args
 		 */
@@ -235,22 +236,22 @@ if ( ! class_exists( 'PB_Settings' ) ) {
 		 */
 		function add_menu_in_admin_menu() {
 
-			if ( "menu" == $this->get_menu_type() ) {
+			if ( "main_menu" == $this->get_menu_type() ) {
 				$menu_ret = add_menu_page( $this->get_menu_name(), $this->get_menu_title(), $this->get_capability(), $this->get_menu_slug(), array(
 					$this,
 					'display_function'
 				), $this->get_menu_icon(), $this->get_menu_position() );
 
-				do_action( 'pb_settings_menu_added_' . $this->get_menu_slug(), $menu_ret );
+				do_action( 'wp_settings_main_menu_added_' . $this->get_menu_slug(), $menu_ret );
 			}
 
-			if ( "submenu" == $this->get_menu_type() ) {
+			if ( "sub_menu" == $this->get_menu_type() ) {
 				$submenu_ret = add_submenu_page( $this->get_parent_slug(), $this->get_page_title(), $this->get_menu_title(), $this->get_capability(), $this->get_menu_slug(), array(
 					$this,
 					'display_function'
 				) );
 
-				do_action( 'pb_settings_submenu_added_' . $this->get_menu_slug(), $submenu_ret );
+				do_action( 'wp_settings_submenu_added_' . $this->get_menu_slug(), $submenu_ret );
 			}
 		}
 
@@ -377,7 +378,7 @@ if ( ! class_exists( 'PB_Settings' ) ) {
 				return;
 			}
 
-			do_action( "pb_settings_before_$id", $option );
+			do_action( "wp_settings_before_$id", $option );
 
 			if ( isset( $option['type'] ) && ! empty( $field_type = $option['type'] ) ) {
 
@@ -393,17 +394,17 @@ if ( ! class_exists( 'PB_Settings' ) ) {
 				printf( '<span class="disabled-notice" style="background: #ffe390eb;margin-left: 10px;padding: 5px 12px;font-size: 12px;border-radius: 3px;color: #717171;">%s</span>', $this->get_disabled_notice() );
 			}
 
-			do_action( "pb_settings_before_option", $option );
+			do_action( "wp_settings_before_option", $option );
 
-			do_action( "pb_settings_$id", $option );
+			do_action( "wp_settings_$id", $option );
 
 			if ( ! empty( $details ) ) {
 				echo "<p class='description'>$details</p>";
 			}
 
-			do_action( "pb_settings_after_option", $option );
+			do_action( "wp_settings_after_option", $option );
 
-			do_action( "pb_settings_after_$id", $option );
+			do_action( "wp_settings_after_$id", $option );
 		}
 
 
@@ -1147,6 +1148,7 @@ if ( ! class_exists( 'PB_Settings' ) ) {
 			$this->checked[] = 'image_select';
 		}
 
+
 		/**
 		 * Section Callback
 		 *
@@ -1195,19 +1197,19 @@ if ( ! class_exists( 'PB_Settings' ) ) {
 				<?php
 				settings_errors();
 
-				do_action( 'pb_settings_before_page_' . $this->get_current_page(), $this );
+				do_action( 'wp_settings_before_page_' . $this->get_current_page(), $this );
 
 				$this->get_settings_nav_tab();
 
 				if ( $this->show_submit_button() ) {
-					printf( '<form class="pb_settings_form" action="options.php" method="post">%s%s</form>', $this->get_settings_fields_html(), get_submit_button() );
+					printf( '<form class="wp_settings_form" action="options.php" method="post">%s%s</form>', $this->get_settings_fields_html(), get_submit_button() );
 				} else {
 					print( $this->get_settings_fields_html() );
 				}
 
 				do_action( $this->get_current_page(), $this );
 
-				do_action( 'pb_settings_after_page_' . $this->get_current_page(), $this );
+				do_action( 'wp_settings_after_page_' . $this->get_current_page(), $this );
 				?>
             </div>
 			<?php
@@ -1236,7 +1238,7 @@ if ( ! class_exists( 'PB_Settings' ) ) {
 					printf( '<a href="%s?%s" class="nav-tab %s">%s</a>', $pagenow, $nav_menu_url, $active, $page_nav );
 				}
 
-				do_action( 'pb_settings_after_nav_tab' );
+				do_action( 'wp_settings_after_nav_tab' );
 				?>
             </nav>
 			<?php
@@ -1252,7 +1254,7 @@ if ( ! class_exists( 'PB_Settings' ) ) {
 
 			ob_start();
 
-			do_action( 'pb_settings_page_' . $this->get_current_page() );
+			do_action( 'wp_settings_page_' . $this->get_current_page() );
 
 			settings_fields( $this->get_current_page() );
 			do_settings_sections( $this->get_current_page() );
@@ -1398,7 +1400,7 @@ if ( ! class_exists( 'PB_Settings' ) ) {
 				$pages_array[ $page->ID ] = $page->post_title;
 			}
 
-			return apply_filters( 'pb_settings_filter_pages', $pages_array );
+			return apply_filters( 'wp_settings_filter_pages', $pages_array );
 		}
 
 
@@ -1414,7 +1416,7 @@ if ( ! class_exists( 'PB_Settings' ) ) {
 				$user_array[ $user->ID ] = $user->display_name;
 			}
 
-			return apply_filters( 'pb_settings_filter_users', $user_array );
+			return apply_filters( 'wp_settings_filter_users', $user_array );
 		}
 
 
@@ -1732,8 +1734,9 @@ if ( ! class_exists( 'PB_Settings' ) ) {
 				$option_value = $default;
 			}
 
-			return apply_filters( 'pb_settings_option_value', $option_value, $option_id, $option );
+			return apply_filters( 'wp_settings_option_value', $option_value, $option_id, $option );
 		}
+
 
 		/**
 		 * Return data using key from args
