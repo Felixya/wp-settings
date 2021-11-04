@@ -237,19 +237,13 @@ if ( ! class_exists( 'WP_Settings' ) ) {
 		function add_menu_in_admin_menu() {
 
 			if ( "main_menu" == $this->get_menu_type() ) {
-				$menu_ret = add_menu_page( $this->get_menu_name(), $this->get_menu_title(), $this->get_capability(), $this->get_menu_slug(), array(
-					$this,
-					'display_function'
-				), $this->get_menu_icon(), $this->get_menu_position() );
+                $menu_ret = add_menu_page( $this->get_page_tab_title(), $this->get_menu_title(), $this->get_capability(), $this->get_menu_slug(), array( $this, 'display_function' ), $this->get_menu_icon(), $this->get_menu_position() );
 
 				do_action( 'wp_settings_main_menu_added_' . $this->get_menu_slug(), $menu_ret );
 			}
 
 			if ( "sub_menu" == $this->get_menu_type() ) {
-				$submenu_ret = add_submenu_page( $this->get_parent_slug(), $this->get_page_title(), $this->get_menu_title(), $this->get_capability(), $this->get_menu_slug(), array(
-					$this,
-					'display_function'
-				) );
+				$submenu_ret = add_submenu_page( $this->get_parent_slug(), $this->get_page_title(), $this->get_menu_title(), $this->get_capability(), $this->get_menu_slug(), array( $this, 'display_function' ) );
 
 				do_action( 'wp_settings_submenu_added_' . $this->get_menu_slug(), $submenu_ret );
 			}
@@ -1494,10 +1488,10 @@ if ( ! class_exists( 'WP_Settings' ) ) {
 		 * @return mixed|string
 		 */
 		private function get_menu_type() {
-			if ( isset( $this->data['menu_type'] ) ) {
-				return $this->data['menu_type'];
+			if ( isset( $this->data['type'] ) ) {
+				return $this->data['type'];
 			} else {
-				return "main";
+				return 'main_menu';
 			}
 		}
 
@@ -1591,7 +1585,7 @@ if ( ! class_exists( 'WP_Settings' ) ) {
 			if ( isset( $this->data['capability'] ) ) {
 				return $this->data['capability'];
 			} else {
-				return "manage_options";
+				return 'manage_options';
 			}
 		}
 
@@ -1602,8 +1596,8 @@ if ( ! class_exists( 'WP_Settings' ) ) {
 		 * @return mixed|string
 		 */
 		private function get_menu_page_title() {
-			if ( isset( $this->data['menu_page_title'] ) ) {
-				return $this->data['menu_page_title'];
+			if ( isset( $this->data['page_title'] ) ) {
+				return $this->data['page_title'];
 			} else {
 				return "My Custom Menu";
 			}
@@ -1615,11 +1609,11 @@ if ( ! class_exists( 'WP_Settings' ) ) {
 		 *
 		 * @return mixed|string
 		 */
-		private function get_menu_name() {
-			if ( isset( $this->data['menu_name'] ) ) {
-				return $this->data['menu_name'];
+		private function get_page_tab_title() {
+			if ( isset( $this->data['page_tab_title'] ) ) {
+				return $this->data['page_tab_title'];
 			} else {
-				return "Menu Name";
+				return 'Page Tab Title';
 			}
 		}
 
@@ -1659,9 +1653,9 @@ if ( ! class_exists( 'WP_Settings' ) ) {
 		 */
 		private function add_in_menu() {
 			if ( isset( $this->data['add_in_menu'] ) && $this->data['add_in_menu'] ) {
-				return true;
+				return $this->data['add_in_menu'];
 			} else {
-				return false;
+				return true;
 			}
 		}
 
